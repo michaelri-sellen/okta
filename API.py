@@ -1,10 +1,28 @@
-import json, requests, configparser
+import os, sys, json, requests, configparser
 
 url = 'https://sellen.okta.com/api/v1/users/'
+auth = ''
 config = configparser.ConfigParser()
-config.readfp(open('config.txt'))
 
-auth = config.get('Default', 'key')
+if not os.path.isfile('config.txt'):
+    configFile = open('config.txt', 'w+')
+    configFile.write('[Default]\nkey = ')
+    configFile.close()
+    print('A new config.txt file has been created. Please enter your API key into this file')
+    sys.exit()
+
+config.read('config.txt')
+
+if 'Default' in config and 'key' in config['Default']:
+    auth = config['Default']['key']
+else:
+    print('config.txt is not properly formatted')
+    sys.exit()
+
+if auth == '':
+    print('API key is missing from config.txt')
+    sys.exit()
+
 headers = {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
