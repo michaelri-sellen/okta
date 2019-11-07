@@ -28,18 +28,20 @@ headers = {
     'Content-Type': 'application/json',
     'Authorization': 'SSWS ' + auth
     }
-data = {
+
+
+def CreateUser(firstName, lastName, email, eid):
+    data = {
     'profile': {
-        'firstName': 'test',
-        'lastName': 'michael',
-        'email': 'apitest@sellen.com',
-        'login': 'apitest@sellen.com',
+        'firstName': firstName,
+        'lastName': lastName,
+        'email': email,
+        'login': email,
+        'employeeNumber': eid
+        }
     }
-}
+    data = json.dumps(data)
 
-data = json.dumps(data)
-
-def CreateUser():
     print(
         json.dumps(
             json.loads(requests.post(url, data = data, headers = headers).text), 
@@ -53,7 +55,16 @@ def DeleteUser(user):
         r = requests.delete(url + user, headers=headers).status_code
     print('User {} has been deleted'.format(user))
 
-CreateUser()
+
+# Run API tests with a test user and the API functions above
+testUser = {
+    'firstName': 'test',
+    'lastName': 'michael',
+    'email': 'apitest@sellen.com',
+    'eid': '99999'
+}
+
+CreateUser(testUser['firstName'], testUser['lastName'], testUser['email'], testUser['eid'])
 print('Press enter to continue or Ctrl + C to quit')
 input()
-DeleteUser('apitest@sellen.com')
+DeleteUser(testUser['email'])
