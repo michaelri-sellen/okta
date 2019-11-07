@@ -38,7 +38,22 @@ data = {
 }
 
 data = json.dumps(data)
-r = requests.post(url, data = data, headers = headers).text
-#r = requests.delete('https://sellen.okta.com/api/v1/users/apitest@sellen.com').text
-j = json.dumps(json.loads(r), indent = 4, sort_keys = True)
-print(j)
+
+def CreateUser():
+    print(
+        json.dumps(
+            json.loads(requests.post(url, data = data, headers = headers).text), 
+            indent = 4, sort_keys = True
+        )
+    )
+
+def DeleteUser(user):
+    r = requests.delete(url + user, headers=headers).status_code
+    while r != 404:
+        r = requests.delete(url + user, headers=headers).status_code
+    print('User {} has been deleted'.format(user))
+
+CreateUser()
+print('Press enter to continue or Ctrl + C to quit')
+input()
+DeleteUser('apitest@sellen.com')
