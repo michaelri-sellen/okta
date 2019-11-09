@@ -1,7 +1,7 @@
 import os, sys, json, requests, configparser
 
 url = 'https://sellen.okta.com/api/v1/users/'
-auth = ''
+key = ''
 config = configparser.ConfigParser()
 
 if not os.path.isfile('config.txt'):
@@ -14,19 +14,19 @@ if not os.path.isfile('config.txt'):
 config.read('config.txt')
 
 if 'Default' in config and 'key' in config['Default']:
-    auth = config['Default']['key']
+    key = config['Default']['key']
 else:
     print('config.txt is not properly formatted')
     sys.exit()
 
-if auth == '':
+if key == '':
     print('API key is missing from config.txt')
     sys.exit()
 
 headers = {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
-    'Authorization': 'SSWS ' + auth
+    'Authorization': 'SSWS ' + key
     }
 
 
@@ -50,9 +50,9 @@ def CreateUser(firstName, lastName, email, eid):
     )
 
 def DeleteUser(user):
-    r = requests.delete(url + user, headers=headers).status_code
-    while r != 404:
-        r = requests.delete(url + user, headers=headers).status_code
+    status = requests.delete(url + user, headers=headers).status_code
+    while status != 404:
+        status = requests.delete(url + user, headers=headers).status_code
     print('User {} has been deleted'.format(user))
 
 
