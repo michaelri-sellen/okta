@@ -29,25 +29,24 @@ headers = {
     'Authorization': 'SSWS ' + key
     }
 
+def PrettyPrint(rawJson):
+    print(json.dumps(json.loads(rawJson), indent=4, sort_keys=True))
 
-def CreateUser(firstName, lastName, email, eid):
+def CreateUser(firstName, lastName, email, phone, eid):
     data = {
     'profile': {
         'firstName': firstName,
         'lastName': lastName,
         'email': email,
+        'primaryPhone': phone,
         'login': email,
         'employeeNumber': eid
-        }
+        },
+    'groupIds': ['00gcbyakoaxiUq5pl1t7']
     }
     data = json.dumps(data)
 
-    print(
-        json.dumps(
-            json.loads(requests.post(url, data = data, headers = headers).text), 
-            indent = 4, sort_keys = True
-        )
-    )
+    PrettyPrint(requests.post(url, data = data, headers = headers).text)
 
 def DeleteUser(user):
     status = requests.delete(url + user, headers=headers).status_code
@@ -55,16 +54,20 @@ def DeleteUser(user):
         status = requests.delete(url + user, headers=headers).status_code
     print('User {} has been deleted'.format(user))
 
+def GetGroups(user):
+    PrettyPrint(requests.get(url + user + '/groups', headers=headers).text) 
 
 # Run API tests with a test user and the API functions above
 testUser = {
     'firstName': 'test',
     'lastName': 'michael',
-    'email': 'apitest@sellen.com',
+    'email': 'apitest@email.com',
+    'phone': '+1-206-555-1212',
     'eid': '99999'
 }
 
-CreateUser(testUser['firstName'], testUser['lastName'], testUser['email'], testUser['eid'])
+CreateUser(testUser['firstName'], testUser['lastName'], testUser['email'], testUser['phone'], testUser['eid'])
+GetGroups(testUser['email'])
 print('Press enter to continue or Ctrl + C to quit')
 input()
 DeleteUser(testUser['email'])
