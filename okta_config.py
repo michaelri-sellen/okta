@@ -10,7 +10,7 @@ class Config:
 
         if not os.path.isfile('config.txt'):
             configFile = open('config.txt', 'w+')
-            configFile.write('[Okta]\nkey = ')
+            configFile.write('[Okta]\nkey = \n\n[Snowflake]\nkey = ')
             configFile.close()
             print('A new config.txt file has been created. Please enter your API key into this file')
             sys.exit()

@@ -1,2 +1,4 @@
 config.txt
 .vscode/settings.json
+rsa_key.p8
+rsa_key.pub
