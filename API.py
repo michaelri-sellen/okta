@@ -38,7 +38,7 @@ def CreateUser(firstName, lastName, email, phone, eid):
         'firstName': firstName,
         'lastName': lastName,
         'email': email,
-        'primaryPhone': phone,
+        'mobilePhone': phone,
         'login': email,
         'employeeNumber': eid
         },
