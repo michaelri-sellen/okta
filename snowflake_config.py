@@ -43,7 +43,7 @@ class Config:
             encryption_algorithm = serialization.NoEncryption()
         )
 
-        self.connection = snowflake.connector.connect (
+        self.connection = snowflake.connector.connect(
             user = '',
             account = '',
             private_key = raw_p_key,
@@ -51,3 +51,7 @@ class Config:
             database = '',
             schema = ''
         )
+    
+    def __del__(self):
+        if not self.connection is None:
+            self.connection.close()
