@@ -4,7 +4,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives.asymmetric import dsa
 from cryptography.hazmat.primitives import serialization
 
-class Config:
+class DB:
     def __init__(self):
         api_key = ''
         p_key = ''
