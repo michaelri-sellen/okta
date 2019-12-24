@@ -31,3 +31,33 @@ class API:
 
     def GetGroups(self, user):
         self.common.PrettyPrint(requests.get(self.config.url + user + '/groups', headers=self.config.headers).text) 
+
+    def __UpdateBase(self, user, data):
+        data = json.dumps(data)
+        self.common.PrettyPrint(requests.post(self.config.url + user, data = data, headers = self.config.headers).text)
+
+    def UpdateName(self, user, firstName, lastName):
+        data = {
+            'profile': {
+                'firstName': firstName,
+                'lastName': lastName,
+            }
+        }
+        self.__UpdateBase(user, data)
+    
+    def UpdatePhone(self, user, phone):
+        data = {
+            'profile': {
+                'mobilePhone': phone
+            }
+        }
+        self.__UpdateBase(user, data)
+
+    def UpdateEmail(self, user, newEmail):
+        data = {
+            'profile': {
+                'login': newEmail,
+                'email': newEmail,
+            }
+        }
+        self.__UpdateBase(user, data)
