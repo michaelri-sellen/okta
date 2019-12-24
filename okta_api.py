@@ -1,12 +1,11 @@
 import json, requests
 from okta_config import Config
-from okta_common import Common
+from common import Common
+
+config = Config()
+common = Common()
 
 class API:
-    def __init__(self):
-        self.config = Config()
-        self.common = Common()
-
     def CreateUser(self, firstName, lastName, email, phone, eid):
         data = {
         'profile': {
@@ -17,24 +16,24 @@ class API:
             'login': email,
             'employeeNumber': eid
             },
-        'groupIds': [self.config.group_id]
+        'groupIds': [config.group_id]
         }
         data = json.dumps(data)
 
-        self.common.PrettyPrint(requests.post(self.config.url, data = data, headers = self.config.headers).text)
+        common.PrettyPrint(requests.post(config.url, data = data, headers = config.headers).text)
 
     def DeleteUser(self, user):
-        status = requests.delete(self.config.url + user, headers=self.config.headers).status_code
+        status = requests.delete(config.url + user, headers=config.headers).status_code
         while status != 404:
-            status = requests.delete(self.config.url + user, headers=self.config.headers).status_code
+            status = requests.delete(config.url + user, headers=config.headers).status_code
         print('User {} has been deleted'.format(user))
 
     def GetGroups(self, user):
-        self.common.PrettyPrint(requests.get(self.config.url + user + '/groups', headers=self.config.headers).text) 
+        common.PrettyPrint(requests.get(config.url + user + '/groups', headers=config.headers).text) 
 
     def __UpdateBase(self, user, data):
         data = json.dumps(data)
-        self.common.PrettyPrint(requests.post(self.config.url + user, data = data, headers = self.config.headers).text)
+        common.PrettyPrint(requests.post(config.url + user, data = data, headers = config.headers).text)
 
     def UpdateName(self, user, firstName, lastName):
         data = {
