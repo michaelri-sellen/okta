@@ -24,7 +24,7 @@ class Config:
             sys.exit()
 
         if key == '':
-            print('API key is missing from config.txt')
+            print('Okta API key is missing from config.txt')
             sys.exit()
 
 

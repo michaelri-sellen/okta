@@ -27,7 +27,7 @@ class Config:
             sys.exit()
 
         if api_key == '':
-            print('API key is missing from config.txt')
+            print('Snowflake API key is missing from config.txt')
             sys.exit()
         
         with open('rsa_key.p8') as encrypted_key:
