@@ -1,4 +1,4 @@
-from okta_common import Common
+from common import Common
 common = Common()
 
 class Config:
