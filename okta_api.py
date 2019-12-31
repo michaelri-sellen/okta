@@ -60,3 +60,15 @@ class API:
             }
         }
         self.__UpdateBase(user, data)
+    
+    def UpdateAll(self, user, firstName, lastName, newEmail, phone):
+        data = {
+            'profile': {
+                'firstName': firstName,
+                'lastName': lastName,
+                'mobilePhone': phone,
+                'login': newEmail,
+                'email': newEmail,
+            }
+        }
+        self.__UpdateBase(user, data)
