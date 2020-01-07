@@ -72,3 +72,12 @@ class API:
             }
         }
         self.__UpdateBase(user, data)
+
+    def UpdateJobTitle(self, user, newTitle):
+        data = {
+            'profile': {
+                'title': newTitle
+            }
+        }
+        data = json.dumps(data)
+        common.PrettyPrint(requests.post(config.url + user, data = data, headers = config.headers).text)
