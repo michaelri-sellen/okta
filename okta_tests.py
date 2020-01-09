@@ -11,10 +11,10 @@ testUser = {
     'eid': '99999'
 }
 
-okta.CreateUser(testUser['firstName'], testUser['lastName'], testUser['email'], testUser['phone'], testUser['eid'])
+okta.CreateUser(testUser['firstName'], testUser['lastName'], testUser['email'], testUser['phone'], testUser['eid'], 'Placeholder2020!')
 print('Press enter to continue or Ctrl + C to quit')
 input()
-okta.UpdateEmail(testUser['email'], 'test@example.com')
-print('Press enter to continue or Ctrl + C to quit')
-input()
+#okta.UpdateEmail(testUser['email'], 'test@example.com')
+#print('Press enter to continue or Ctrl + C to quit')
+#input()
 okta.DeleteUser(testUser['email'])

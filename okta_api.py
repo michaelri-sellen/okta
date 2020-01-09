@@ -6,7 +6,7 @@ config = Config()
 common = Common()
 
 class API:
-    def CreateUser(self, firstName, lastName, email, phone, eid):
+    def CreateUser(self, firstName, lastName, email, phone, eid, password = None):
         data = {
         'profile': {
             'firstName': firstName,
@@ -18,7 +18,15 @@ class API:
             },
         'groupIds': [config.group_id]
         }
+        if password is not None:
+            data['credentials'] = {
+                'password': {
+                    'value': password
+                }
+            }
         data = json.dumps(data)
+        #common.PrettyPrint(data)
+        #exit()
 
         common.PrettyPrint(requests.post(config.url, data = data, headers = config.headers).text)
 
