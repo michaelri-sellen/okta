@@ -1,6 +1,5 @@
 from openpyxl import load_workbook
 from okta_api import API
-from enum import Enum
 
 okta = API()
 source = list(load_workbook('OKTA Query from Snowflake.xlsx', read_only=True).worksheets[0].rows)
