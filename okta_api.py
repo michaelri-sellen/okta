@@ -25,23 +25,50 @@ class API:
                 }
             }
         data = json.dumps(data)
-        #common.PrettyPrint(data)
-        #exit()
 
-        common.PrettyPrint(requests.post(config.url, data = data, headers = config.headers).text)
+        response = requests.post(config.users_url, data = data, headers = config.headers)
+        
+        if response.ok:
+            print("User {} has been added".format(email))
+            self.AddToEToolbox(json.loads(response.text)['id'], email)
+        else:
+            common.PrettyPrint(response.text)
+
+    def AddToEToolbox(self, userID, email):
+        data = {
+            'id': userID,
+            'scope': 'USER',
+            'credentials': {
+                'userName': email,
+                'password': {}
+            }
+        }
+        data = json.dumps(data)
+
+        response = requests.post(config.apps_url + config.etoolbox_id + '/users', data = data, headers = config.headers)
+
+        if response.ok:
+            print('E-Toolbox was assigned to the account {}'.format(email))
+        else:
+            common.PrettyPrint(response.text)
 
     def DeleteUser(self, user):
-        status = requests.delete(config.url + user, headers=config.headers).status_code
+        status = requests.delete(config.users_url + user, headers=config.headers).status_code
         while status != 404:
-            status = requests.delete(config.url + user, headers=config.headers).status_code
+            status = requests.delete(config.users_url + user, headers=config.headers).status_code
         print('User {} has been deleted'.format(user))
 
     def GetGroups(self, user):
-        common.PrettyPrint(requests.get(config.url + user + '/groups', headers=config.headers).text) 
+        common.PrettyPrint(requests.get(config.users_url + user + '/groups', headers=config.headers).text) 
 
     def __UpdateBase(self, user, data):
         data = json.dumps(data)
-        common.PrettyPrint(requests.post(config.url + user, data = data, headers = config.headers).text)
+        response = requests.post(config.users_url + user, data = data, headers = config.headers)
+
+        if response.ok:
+            print('The update to user {} was successful'.format(user))
+        else:
+            common.PrettyPrint(response.text)
 
     def UpdateName(self, user, firstName, lastName):
         data = {
@@ -88,4 +115,10 @@ class API:
             }
         }
         data = json.dumps(data)
-        common.PrettyPrint(requests.post(config.url + user, data = data, headers = config.headers).text)
+
+        response = requests.post(config.users_url + user, data = data, headers = config.headers)
+
+        if response.ok:
+            print('User {} was successfully updated to the {} job title'.format(user, newTitle))
+        else:
+            common.PrettyPrint(response.text)
