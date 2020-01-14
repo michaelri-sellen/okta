@@ -26,12 +26,12 @@ class DB:
         )
 
         self.connection = snowflake.connector.connect(
-            user = '',
-            account = '',
+            user = common.snowflake_user,
+            account = common.snowflake_account,
             private_key = raw_p_key,
-            warehouse = '',
-            database = '',
-            schema = ''
+            warehouse = common.snowflake_warehouse,
+            database = common.snowflake_database,
+            schema = common.snowflake_schema
         )
     
     def __del__(self):
