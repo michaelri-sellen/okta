@@ -28,7 +28,6 @@ class Okta:
         response = requests.post(config.users_url, data = data, headers = config.headers)
         
         if response.ok:
-            common.PrettyPrint(response.text)
             print("User {} has been added".format(email))
             self.__AddToEToolbox(json.loads(response.text)['id'], email)
         else:
