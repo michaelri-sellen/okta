@@ -58,7 +58,7 @@ class Okta:
             status = requests.delete(config.users_url + user, headers=config.headers).status_code
         print('User {} has been deleted'.format(user))
     
-    def UpdateUser(self, eid, firstName, lastName, newEmail, phone):
+    def UpdateUser(self, eid, firstName, lastName, email, phone):
         get_user = requests.get(config.users_url + '?search=profile.employeeNumber+eq+"{}"'.format(eid), headers = config.headers)
         
         if get_user.ok:
@@ -69,8 +69,8 @@ class Okta:
                     'firstName': firstName,
                     'lastName': lastName,
                     'mobilePhone': phone,
-                    'login': newEmail,
-                    'email': newEmail,
+                    'login': email,
+                    'email': email,
                 }
             }
             data = json.dumps(data)
