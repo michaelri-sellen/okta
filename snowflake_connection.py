@@ -5,9 +5,9 @@ from cryptography.hazmat.primitives.asymmetric import dsa
 from cryptography.hazmat.primitives import serialization
 from common import Common
 
-common = Common()
+config = Common().snowflake_config
 
-class DB:
+class Snowflake:
     def __init__(self):
         p_key = ''
         raw_p_key = ''
@@ -15,7 +15,7 @@ class DB:
         with open('rsa_key.p8') as encrypted_key:
             p_key = serialization.load_pem_private_key(
                 encrypted_key.read().encode('ascii'),
-                password = common.snowflake_key.encode(),
+                password = config.key.encode(),
                 backend = default_backend()
             )
         
@@ -26,12 +26,12 @@ class DB:
         )
 
         self.connection = snowflake.connector.connect(
-            user = common.snowflake_user,
-            account = common.snowflake_account,
+            user = config.user,
+            account = config.account,
             private_key = raw_p_key,
-            warehouse = common.snowflake_warehouse,
-            database = common.snowflake_database,
-            schema = common.snowflake_schema
+            warehouse = config.warehouse,
+            database = config.database,
+            schema = config.schema
         )
     
     def __del__(self):

@@ -1,7 +1,7 @@
 from openpyxl import load_workbook
-from okta_api import API
+from okta_api import Okta
 
-okta = API()
+okta = Okta()
 source = list(load_workbook('OKTA Query from Snowflake.xlsx', read_only=True).worksheets[0].rows)
 
 for row in range(1, len(source)):

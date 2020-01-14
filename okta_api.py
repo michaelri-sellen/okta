@@ -1,11 +1,10 @@
 import json, requests
-from okta_config import Config
 from common import Common
 
-config = Config()
 common = Common()
+config = common.okta_config
 
-class API:
+class Okta:
     def CreateUser(self, firstName, lastName, email, phone, eid, password = None):
         data = {
         'profile': {
@@ -46,7 +45,7 @@ class API:
         }
         data = json.dumps(data)
 
-        response = requests.post(config.apps_url + config.etoolbox_id + '/users', data = data, headers = config.headers)
+        response = requests.post(config.apps_url + config.app_id + '/users', data = data, headers = config.headers)
 
         if response.ok:
             print('E-Toolbox was assigned to the account {}'.format(email))
