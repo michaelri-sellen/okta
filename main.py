@@ -1,13 +1,15 @@
-# This code has been written as a placeholder until the database setup has been completed.
-# Once the database is set up properly, this code will almost cetainly change to reflect the correct query structure.
 from okta_api import Okta
 from snowflake_connection import Snowflake
 
 okta = Okta()
 snowflake = Snowflake()
 
-#for user in database.connection.cursor("Select * From New_Users").fetchall():
-#    api.CreateUser(user[0], user[1], user[2], user[3], user[4])
-#
-#for user in database.connection.cursor("Select * From Delete_Users").fetchall():
-#    api.DeleteUser(user[0])
+query = snowflake.connection.cursor().execute('Select * From prod_db.public.v_okta_account_changes').fetchall()
+
+for row in query:
+    if row[0] == 'ADD EMPLOYEE':
+        okta.CreateUser(row[3], row[2], row[4], row[5] if row[5] is not None else '', row[1])
+    elif row[0] == 'DELETE EMPLOYEE':
+        okta.DeleteUser(row[4])
+    elif row[0] == 'UPDATE EMPLOYEE':
+        okta.UpdateUser(row[1], row[3], row[2], row[4], row[5] if row[5] is not None else '')
