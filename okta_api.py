@@ -29,12 +29,13 @@ class API:
         response = requests.post(config.users_url, data = data, headers = config.headers)
         
         if response.ok:
+            common.PrettyPrint(response.text)
             print("User {} has been added".format(email))
-            self.AddToEToolbox(json.loads(response.text)['id'], email)
+            self.__AddToEToolbox(json.loads(response.text)['id'], email)
         else:
             common.PrettyPrint(response.text)
 
-    def AddToEToolbox(self, userID, email):
+    def __AddToEToolbox(self, userID, email):
         data = {
             'id': userID,
             'scope': 'USER',
@@ -57,68 +58,29 @@ class API:
         while status != 404:
             status = requests.delete(config.users_url + user, headers=config.headers).status_code
         print('User {} has been deleted'.format(user))
-
-    def GetGroups(self, user):
-        common.PrettyPrint(requests.get(config.users_url + user + '/groups', headers=config.headers).text) 
-
-    def __UpdateBase(self, user, data):
-        data = json.dumps(data)
-        response = requests.post(config.users_url + user, data = data, headers = config.headers)
-
-        if response.ok:
-            print('The update to user {} was successful'.format(user))
-        else:
-            common.PrettyPrint(response.text)
-
-    def UpdateName(self, user, firstName, lastName):
-        data = {
-            'profile': {
-                'firstName': firstName,
-                'lastName': lastName,
-            }
-        }
-        self.__UpdateBase(user, data)
     
-    def UpdatePhone(self, user, phone):
-        data = {
-            'profile': {
-                'mobilePhone': phone
-            }
-        }
-        self.__UpdateBase(user, data)
+    def UpdateUser(self, eid, firstName, lastName, newEmail, phone):
+        get_user = requests.get(config.users_url + '?search=profile.employeeNumber+eq+"{}"'.format(eid), headers = config.headers)
+        
+        if get_user.ok:
+            user = json.loads(get_user.text)[0]['id']
 
-    def UpdateEmail(self, user, newEmail):
-        data = {
-            'profile': {
-                'login': newEmail,
-                'email': newEmail,
+            data = {
+                'profile': {
+                    'firstName': firstName,
+                    'lastName': lastName,
+                    'mobilePhone': phone,
+                    'login': newEmail,
+                    'email': newEmail,
+                }
             }
-        }
-        self.__UpdateBase(user, data)
-    
-    def UpdateAll(self, user, firstName, lastName, newEmail, phone):
-        data = {
-            'profile': {
-                'firstName': firstName,
-                'lastName': lastName,
-                'mobilePhone': phone,
-                'login': newEmail,
-                'email': newEmail,
-            }
-        }
-        self.__UpdateBase(user, data)
+            data = json.dumps(data)
 
-    def UpdateJobTitle(self, user, newTitle):
-        data = {
-            'profile': {
-                'title': newTitle
-            }
-        }
-        data = json.dumps(data)
+            response = requests.post(config.users_url + user, data = data, headers = config.headers)
 
-        response = requests.post(config.users_url + user, data = data, headers = config.headers)
-
-        if response.ok:
-            print('User {} was successfully updated to the {} job title'.format(user, newTitle))
+            if response.ok:
+                print('The update to user {} was successful'.format(eid))
+            else:
+                common.PrettyPrint(response.text)
         else:
-            common.PrettyPrint(response.text)
+            common.PrettyPrint(get_user.text)
