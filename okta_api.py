@@ -10,7 +10,7 @@ class Okta:
     #This function creates a new user in Okta
     # When calling CreateUser(), the firstName, lastName, email, phone, and eid are required
     # A password is not required, but if one is provided a welcome email will not be sent to the user
-    def CreateUser(self, firstName, lastName, email, phone, eid, password = None):
+    def CreateUser(self, firstName, lastName, email, phone, eid, password = None, test = False):
         #Build the data structure using the parameters that were passed to CreateUser()
         data = {
         'profile': {
@@ -19,7 +19,8 @@ class Okta:
             'email': email,
             'mobilePhone': phone,
             'login': email,
-            'employeeNumber': eid
+            'employeeNumber': eid,
+            'samaccountname': eid
             },
         'groupIds': [config.group_id]
         }
@@ -37,13 +38,13 @@ class Okta:
         if response.ok: #User was created successfully
             print("User {} has been added".format(email))
             #Now that the user has been created, provision the E-Toolbox app to them
-            self.__AddToEToolbox(json.loads(response.text)['id'], email)
+            self.__AddToEToolbox(json.loads(response.text)['id'], email, test)
         else: #User was not created, PrettyPrint() the error message
             common.PrettyPrint(response.text)
 
     #This function is private and can only be called by other functions in this class
     # It will provision the E-Toolbox app to the userID specified
-    def __AddToEToolbox(self, userID, email):
+    def __AddToEToolbox(self, userID, email, test):
         #Build the data structure using the parameters that were passed to __AddToEToolbox()
         data = {
             'id': userID,
@@ -56,12 +57,21 @@ class Okta:
         data = json.dumps(data) #Format the data structure for use with the Okta API
 
         #Call the Okta API using the formatted data and store the response from the API
-        response = requests.post(config.apps_url + config.app_id + '/users', data = data, headers = config.headers)
+        response = requests.post(config.apps_url + config.etoolbox_id + '/users', data = data, headers = config.headers)
 
         if response.ok: #E-Toolbox was provisioned successfully
             print('E-Toolbox was assigned to the account {}'.format(email))
         else: #E-Toolbox was not provisioned, PrettyPrint() the error message
             common.PrettyPrint(response.text)
+
+        if test:
+            #Call the Okta API using the formatted data and store the response from the API
+            response = requests.post(config.apps_url + config.keystyle_id + '/users', data = data, headers = config.headers)
+    
+            if response.ok: #Keystyle was provisioned successfully
+                print('Keystyle was assigned to the account {}'.format(email))
+            else: #Keystyle was not provisioned, PrettyPrint() the error message
+                common.PrettyPrint(response.text)
 
     #This function deletes the specified user
     def DeleteUser(self, user):

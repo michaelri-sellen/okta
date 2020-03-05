@@ -8,7 +8,8 @@ class Common:
             self.users_url = ''
             self.apps_url = ''
             self.group_id = ''
-            self.app_id = ''
+            self.etoolbox_id = ''
+            self.keystyle_id = ''
             self.headers = ''
 
     class Snowflake_Config: #Define Snowflake settings before loading in the values from config.txt
@@ -29,7 +30,7 @@ class Common:
         parser = configparser.ConfigParser() #Create a new instance of ConfigParser to load values from config.txt
         #List the names of the parameters to load from config.txt
         # By listing them here, we can ensure that a newly generated config.txt and an existing config.txt are properly formatted
-        okta_params = ('key', 'url', 'group', 'app')
+        okta_params = ('key', 'url', 'group', 'etoolbox', 'keystyle')
         snowflake_params = ('key', 'user', 'account', 'warehouse', 'database', 'schema')
 
         #Check to see if config.txt exists, and generate a new config.txt if it doesn't
@@ -37,8 +38,8 @@ class Common:
             configFile = open('config.txt', 'w+')
             
             configFile.write(
-                '[Okta]\n{} = \n{} = \n{} = \n{} = \n\n[Snowflake]\n{} = \n{} = \n{} = \n{} = \n{} = \n{} = '.format(
-                    okta_params[0], okta_params[1], okta_params[2], okta_params[3],
+                '[Okta]\n{} = \n{} = \n{} = \n{} = \n {} = \n\n[Snowflake]\n{} = \n{} = \n{} = \n{} = \n{} = \n{} = '.format(
+                    okta_params[0], okta_params[1], okta_params[2], okta_params[3], okta_params[4],
                     snowflake_params[0], snowflake_params[1], snowflake_params[2], snowflake_params[3], snowflake_params[4], snowflake_params[5]
                 )
             )
@@ -59,7 +60,8 @@ class Common:
             self.okta_config.users_url = parser['Okta'][okta_params[1]] + '/users/'
             self.okta_config.apps_url = parser['Okta'][okta_params[1]] + '/apps/'
             self.okta_config.group_id = parser['Okta'][okta_params[2]]
-            self.okta_config.app_id = parser['Okta'][okta_params[3]]
+            self.okta_config.etoolbox_id = parser['Okta'][okta_params[3]]
+            self.okta_config.keystyle_id = parser['Okta'][okta_params[4]]
 
             self.snowflake_config.key = parser['Snowflake'][snowflake_params[0]]
             self.snowflake_config.user = parser['Snowflake'][snowflake_params[1]]
